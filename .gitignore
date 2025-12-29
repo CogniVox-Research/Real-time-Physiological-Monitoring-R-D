@@ -1,0 +1,79 @@
+# General
+.DS_Store
+Thumbs.db
+.fseventsd
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Virtual Environments (Python)
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Android / Gradle / IntelliJ
+*.iml
+.gradle/
+.idea/
+/local.properties
+/.nav/
+.cxx/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+
+# Android Studio - Native Code
+.externalNativeBuild
+.cxx
+
+# Android Studio - Google Services
+google-services.json
+
+# Keystore files
+*.jks
+*.keystore
+*.pem
+*.p12
+
+# BioSync_Galaxy Android Project specific
+BioSync_Galaxy/local.properties
+BioSync_Galaxy/.gradle/
+BioSync_Galaxy/.idea/
+BioSync_Galaxy/*/build/
+BioSync_Galaxy/build/
+
+# Captures (Android Profiler)
+captures/
