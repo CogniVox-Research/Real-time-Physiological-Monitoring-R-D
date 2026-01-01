@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +46,9 @@ class MainActivity : ComponentActivity() {
 fun WearApp() {
     val context = LocalContext.current
     var hasPermissions by remember { mutableStateOf(false) }
+    
+    val heartRate by WearDataRepository.heartRate.collectAsState()
+    val isServiceRunning by WearDataRepository.serviceRunning.collectAsState()
 
     val permissionsToRequest = mutableListOf(
         Manifest.permission.BODY_SENSORS
@@ -80,29 +84,44 @@ fun WearApp() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "BioSync", fontSize = 20.sp)
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        if (hasPermissions) {
-            Button(onClick = {
-                android.widget.Toast.makeText(context, "Starting Service...", android.widget.Toast.LENGTH_SHORT).show()
-                context.startForegroundService(Intent(context, HRVService::class.java))
-            }) {
-                Text("Start")
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = {
-                android.widget.Toast.makeText(context, "Stopping Service...", android.widget.Toast.LENGTH_SHORT).show()
-                context.stopService(Intent(context, HRVService::class.java))
-            }) {
-                Text("Stop")
-            }
-        } else {
+        if (!hasPermissions) {
             Text("Permissions required", fontSize = 14.sp)
             Button(onClick = {
                 launcher.launch(permissionsToRequest.toTypedArray())
             }) {
-                Text("Grant Permissions")
+                Text("Grant")
+            }
+        } else {
+            if (isServiceRunning) {
+                Text(text = "Heart Rate", fontSize = 12.sp, color = MaterialTheme.colors.secondary)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "$heartRate", 
+                    fontSize = 40.sp, 
+                    color = MaterialTheme.colors.primary
+                )
+                Text(text = "bpm", fontSize = 14.sp)
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                Button(onClick = {
+                    android.widget.Toast.makeText(context, "Stopping Service...", android.widget.Toast.LENGTH_SHORT).show()
+                    context.stopService(Intent(context, HRVService::class.java))
+                }) {
+                    Text("Stop")
+                }
+            } else {
+                Text(text = "Start Speech", fontSize = 20.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "🎤", fontSize = 32.sp) // Using emoji as a lightweight icon alternative
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Button(onClick = {
+                    android.widget.Toast.makeText(context, "Starting Service...", android.widget.Toast.LENGTH_SHORT).show()
+                    context.startForegroundService(Intent(context, HRVService::class.java))
+                }) {
+                    Text("Start")
+                }
             }
         }
     }

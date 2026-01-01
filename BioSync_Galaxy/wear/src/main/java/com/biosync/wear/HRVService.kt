@@ -92,6 +92,7 @@ class HRVService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        WearDataRepository.setServiceRunning(true)
         Log.d(TAG, "onCreate: Service starting...")
         
         // Initialize Accelerometer
@@ -140,6 +141,15 @@ class HRVService : Service() {
     }
 
     private fun processDataPoint(dataPoint: DataPoint) {
+        // Extract Heart Rate
+        try {
+            val hr = dataPoint.getValue(ValueKey.HeartRateSet.HEART_RATE) as Int
+            WearDataRepository.updateHeartRate(hr)
+            Log.d(TAG, "Heart Rate: $hr")
+        } catch (e: Exception) {
+            // Ignore if key not found or casting error
+        }
+
         // Extract IBI for RMSSD
         val ibiList = dataPoint.getValue(ValueKey.HeartRateSet.IBI_LIST)
         
@@ -245,6 +255,7 @@ class HRVService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        WearDataRepository.setServiceRunning(false)
         healthTracker?.unsetEventListener()
         if (::healthTrackingService.isInitialized) {
             healthTrackingService.disconnectService()
