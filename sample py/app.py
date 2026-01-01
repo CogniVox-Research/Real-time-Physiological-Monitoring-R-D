@@ -69,16 +69,29 @@ def predict_stress_from_features_dict(model, feature_cols, feat_dict, threshold=
 
 
 def generate_suggestion(label, stress_score):
-    if label == 0:
-        if stress_score < 0.3:
-            return "You are calm. Keep going."
-        else:
-            return "Slight stress detected. Maintain pace and breathing."
+    # Use stress_score for more granular feedback
+    
+    # Zone 1: Deep Relaxation (0.0 - 0.2)
+    if stress_score < 0.2:
+        return "State: Deeply Relaxed. Excellent condition. Great for focus or recovery."
+        
+    # Zone 2: Calm / Balanced (0.2 - 0.45)
+    elif stress_score < 0.45:
+        return "State: Calm. You are balanced and doing well. Keep it up."
+        
+    # Zone 3: Mild Arousal / Warning (0.45 - 0.6)
+    # Approaching the threshold (0.6)
+    elif stress_score < 0.6:
+        return "State: Elevated. You may be experiencing slight pressure. Consider a short break soon."
+        
+    # Zone 4: Moderate Stress (0.6 - 0.8)
+    # The model flipped to label 1 here (>= 0.6)
+    elif stress_score < 0.8:
+        return "State: Stressed. Detected physiological stress. Try 'Box Breathing' (4s in, 4s hold, 4s out, 4s hold)."
+        
+    # Zone 5: High Stress (0.8 - 1.0)
     else:
-        if stress_score < 0.75:
-            return "You seem stressed. Slow down and take a deep breath."
-        else:
-            return "High stress detected. Pause, breathe slowly, then continue."
+        return "State: Highly Stressed. Strong markers detected. Stop what you are doing, close your eyes, and take 5 deep breaths."
 
 @app.post("/predict_stress")
 def predict_stress(input: FeatureInput):

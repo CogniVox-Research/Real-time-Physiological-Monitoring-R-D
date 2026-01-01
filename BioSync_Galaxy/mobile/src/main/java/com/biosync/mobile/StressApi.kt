@@ -45,7 +45,7 @@ object StressApi {
     // IMPORTANT: 10.0.2.2 is localhost for Android Emulator.
     // If running on a physical device, change this to your PC's local IP (e.g., 192.168.1.X)
     // Updated to your local IP
-    private const val BASE_URL = "http://192.168.8.105:8000/" 
+    private const val BASE_URL = "http://192.168.8.103:8000/"
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
